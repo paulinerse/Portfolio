@@ -1,0 +1,5 @@
+Date,Category,Segment,Brand,SKU_Name,Sales_Value,Sales_Volume,Margin_Rate_%,VMH_Units,PDM_Value,DN_%,Price_Index,Promo_ROI
+03/2026,Charcutería,MDD,La Tabla (ALDI),Jamón Cocido Extra,52000,18000,22%,22.4,24%,100%,88,1.45
+03/2026,Charcutería,Marque Nat.,Campofrío,Jamón Cocido,12000,3000,14%,5.2,8%,15%,115,0.85
+03/2026,Bebidas,MDD,Rio D'Oro (ALDI),Zumo Naranja 1L,68000,45000,19%,35.0,28%,100%,82,1.60
+03/2026,Bebidas,Marque Nat.,Don Simón,Zumo Naranja,9500,4000,12%,8.1,5%,10%,125,0.95
