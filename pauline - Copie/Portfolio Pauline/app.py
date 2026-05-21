@@ -8,11 +8,11 @@ import os
 # Helper to find file paths robustly across both local and cloud deployment environments
 def safe_path(relative_subpath):
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    # Try standard parent relative directory
+    # Try standard parent relative directory (for sibling folders like ALDI PROJECT)
     p1 = os.path.join(script_dir, "..", relative_subpath)
     if os.path.exists(p1):
         return p1
-    # Try direct child directory
+    # Try direct child directory (for folders inside Portfolio Pauline like image)
     p2 = os.path.join(script_dir, relative_subpath)
     if os.path.exists(p2):
         return p2
@@ -26,7 +26,7 @@ st.set_page_config(page_title="Pauline Roose | Portfolio", layout="wide", page_i
 st.markdown("""
     <style>
     /* Import premium editorial and geometric fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800&family=Playfair+Display:ital,wght=0,700;0,800;1,700&display=swap');
     
     /* Warm luxury background and main font application */
     .main { 
@@ -146,9 +146,9 @@ st.markdown("""
 
 # 3. SIDEBAR - PROFILE PHOTO XL & INTERACTIVE EXPERTISE CLOUD
 with st.sidebar:
-    # 📸 PHOTO DE PROFIL XL (200px)
+    # 📸 PHOTO DE PROFIL XL RÉPARÉE AVEC SAFE_PATH
     try:
-        with open(r"c:\Users\User\Documents\code\pauline\Portfolio Pauline\image\moi.jpg", "rb") as img_file:
+        with open(safe_path("image/moi.jpg"), "rb") as img_file:
             img_base64 = base64.b64encode(img_file.read()).decode()
         st.markdown(
             f"""
@@ -161,7 +161,7 @@ with st.sidebar:
     except Exception:
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.image(r"c:\Users\User\Documents\code\pauline\Portfolio Pauline\image\moi.jpg", width=150)
+            st.image(safe_path("image/moi.jpg"), width=150)
     
     st.markdown("<h2 style='text-align: center; margin-bottom: 0; font-size: 1.8rem !important;'>Pauline Roose</h2>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; font-weight: 600; color: #C97A63; margin-top: 5px; margin-bottom: 0;'>Research & Insights Manager</p>", unsafe_allow_html=True)
@@ -199,7 +199,7 @@ with st.sidebar:
     
     st.markdown("<br>", unsafe_allow_html=True)
     try:
-        with open(safe_path("Portfolio Pauline/CV_2026-05-20_Pauline_ROOSE.pdf"), "rb") as pdf_file:
+        with open(safe_path("CV_2026-05-20_Pauline_ROOSE.pdf"), "rb") as pdf_file:
             pdf_bytes = pdf_file.read()
         st.download_button(
             label="📥 Download CV (PDF)",
@@ -260,7 +260,7 @@ with menu_tab1:
         """)
 
 # ------------------------------------------
-# TAB 2: EXPERIENCE & IMPACTS (CLEAN & BUG-FREE)
+# TAB 2: EXPERIENCE & IMPACTS
 # ------------------------------------------
 with menu_tab2:
     st.subheader("💼 Professional Journey & Measured Impacts")
@@ -271,7 +271,7 @@ with menu_tab2:
     log_col1, tit_col1 = st.columns([1, 11])
     with log_col1: 
         try:
-            st.image(r"c:\Users\User\Documents\code\pauline\Portfolio Pauline\image\CQMASSO logo 2018 PANTONE.png", width=55)
+            st.image(safe_path("image/CQMASSO logo 2018 PANTONE.png"), width=55)
         except Exception:
             st.markdown("🏢")
     with tit_col1:
@@ -294,7 +294,7 @@ with menu_tab2:
     log_col2, tit_col2 = st.columns([1, 11])
     with log_col2: 
         try:
-            st.image(r"c:\Users\User\Documents\code\pauline\Portfolio Pauline\image\loste.png", width=55)
+            st.image(safe_path("image/loste.png"), width=55)
         except Exception:
             st.markdown("🏢")
     with tit_col2:
@@ -316,7 +316,7 @@ with menu_tab2:
     log_col3, tit_col3 = st.columns([1, 11])
     with log_col3: 
         try:
-            st.image(r"c:\Users\User\Documents\code\pauline\Portfolio Pauline\image\Logo-olga.svg.png", width=55)
+            st.image(safe_path("image/Logo-olga.svg.png"), width=55)
         except Exception:
             st.markdown("🏢")
     with tit_col3:
@@ -338,7 +338,7 @@ with menu_tab2:
     log_col4, tit_col4 = st.columns([1, 11])
     with log_col4: 
         try:
-            st.image(r"c:\Users\User\Documents\code\pauline\Portfolio Pauline\image\SYY.png", width=55)
+            st.image(safe_path("image/SYY.png"), width=55)
         except Exception:
             st.markdown("🏢")
     with tit_col4:
@@ -433,7 +433,8 @@ with menu_tab4:
         """)
         
         try:
-            aldi_df = pd.read_csv(r"c:\Users\User\Documents\code\pauline\ALDI PROJECT\data_aldi.csv")
+            # Réparé avec safe_path() pour charger le vrai dataset dans le cloud
+            aldi_df = pd.read_csv(safe_path("ALDI PROJECT/data_aldi.csv"))
             for col in ["Margin_Rate_%", "PDM_Value", "DN_%"]:
                 if col in aldi_df.columns:
                     aldi_df[col] = aldi_df[col].astype(str).str.replace("%", "", regex=False).str.replace(",", ".", regex=False).str.strip()
@@ -479,7 +480,6 @@ with menu_tab4:
         st.markdown("##### 📁 Live Sample Data Explorer")
         st.dataframe(aldi_df[["Category", "Segment", "Brand", "SKU_Name", "Sales_Value", "Margin_Rate_%", "Price_Index", "VMH_Units", "Promo_ROI"]], use_container_width=True)
 
-        # INTERPRÉTATION RESTAURÉE
         st.markdown("""
         ##### 💡 Strategic Insights & Procurement Takeaways
         * **Own-Brand Dominance:** ALDI's own-brands (**La Tabla** and **Rio D'Oro**) capture **84.8%** of the category sales, delivering robust discounter growth.
@@ -495,7 +495,8 @@ with menu_tab4:
         """)
         
         try:
-            retail_df = pd.read_csv(r"c:\Users\User\Documents\code\pauline\DataRetail\shopping_trends.csv")
+            # Réparé avec safe_path() pour charger la vraie data dans le cloud
+            retail_df = pd.read_csv(safe_path("DataRetail/shopping_trends.csv"))
         except Exception:
             mock_retail_data = {
                 'Customer ID': list(range(1, 11)), 'Age': [55, 19, 50, 21, 45, 46, 63, 27, 26, 57],
@@ -544,7 +545,6 @@ with menu_tab4:
         if sel_gender != "All": filtered_df = filtered_df[filtered_df["Gender"] == sel_gender]
         st.dataframe(filtered_df.head(50), use_container_width=True)
 
-        # INTERPRÉTATION RESTAURÉE
         st.markdown("""
         ##### 💡 Strategic Insights & Category Launch Roadmap
         * **Clothing is the Prime Priority (Score: 60.0):** Boasting an absolute revenue of **$104,264** across **1,737 transactions**, Clothing represents the safest, highest-traction category to launch first.
@@ -599,15 +599,12 @@ with menu_tab4:
         st.markdown("##### 📈 Interactive Multi-Country Trend Explorer (2007-2017)")
         all_countries = sorted(list(malaria_df['Country Name'].unique()))
         
-        # Premium country selector matching UI style
         selected_countries = st.multiselect("Select African Countries to Compare:", options=all_countries, default=['Cote d\'Ivoire', 'Burkina Faso', 'Congo, Dem. Rep.'])
         
         if selected_countries:
             filtered_trend = malaria_df[malaria_df['Country Name'].isin(selected_countries)].copy()
-            # Sort chronologically to prevent line drawing issues
             filtered_trend = filtered_trend.sort_values(by=['Country Name', 'Year'])
             
-            # Draw premium line chart using custom color sequences
             fig_trend = px.line(
                 filtered_trend, 
                 x='Year', 
@@ -628,7 +625,7 @@ with menu_tab4:
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 xaxis=dict(
                     title="Year",
-                    type="category",  # Force category representation to solve decimal years (e.g. 2007.5) bug
+                    type="category",
                     gridcolor="#EAE9E4",
                     linecolor="#EAE9E4"
                 ),
@@ -654,7 +651,6 @@ with menu_tab4:
             bcg_plot_df = pd.merge(df_2017, df_2012, on='Country Name', suffixes=('_2017', '_2012'))
             bcg_plot_df['Evolution'] = bcg_plot_df[malaria_col + '_2017'] - bcg_plot_df[malaria_col + '_2012']
             
-            # Map full and complete population estimates dictionary from sagaci_notebook.ipynb cell 46
             pop_est = {
                 'Nigeria': 190, 'Ethiopia': 106, 'Congo, Dem. Rep.': 81, 'Tanzania': 54,
                 'South Africa': 57, 'Kenya': 50, 'Uganda': 41, 'Algeria': 41, 'Sudan': 40,
@@ -671,10 +667,8 @@ with menu_tab4:
             }
             bcg_plot_df['Population (M)'] = bcg_plot_df['Country Name'].map(pop_est).fillna(5.0)
             
-            # Calculate standard baseline values
             median_incidence_2017 = bcg_plot_df[malaria_col + '_2017'].median()
             
-            # Apply premium classification matching the editorial guidelines
             def get_quadrant(row):
                 if row[malaria_col + '_2017'] < median_incidence_2017:
                     return '✅ HEALTH LEADERS' if row['Evolution'] <= 0 else '⚠️ RESURGENCE RISK'
@@ -692,7 +686,6 @@ with menu_tab4:
                 min_inc = st.slider("Min 2017 Incidence to display:", 0, 300, 0, step=10)
                 show_all = st.checkbox("Show all countries", value=True)
                 
-                # Interactive Label Controls to fix bubble chart overlaps
                 st.markdown("###### Bubble Labeling Options")
                 label_setting = st.selectbox(
                     "Display labels on chart:",
@@ -704,7 +697,6 @@ with menu_tab4:
                 if not show_all: 
                     filtered_bcg = filtered_bcg[filtered_bcg[malaria_col + '_2017'] > min_inc]
                 
-                # Dynamically set display label values based on selected option to prevent text congestion
                 if label_setting == "All countries":
                     filtered_bcg['Display_Label'] = filtered_bcg['Country Name']
                 elif label_setting == "Key countries (Pop > 20M)":
@@ -714,7 +706,6 @@ with menu_tab4:
                 else:
                     filtered_bcg['Display_Label'] = ''
                 
-                # Construct premium bubble chart
                 fig_bcg = px.scatter(
                     filtered_bcg, 
                     x=malaria_col + '_2017', 
@@ -725,31 +716,28 @@ with menu_tab4:
                     text='Display_Label', 
                     title='Advanced BCG Strategic Health Matrix (2012-2017)', 
                     color_discrete_map={
-                        '✅ HEALTH LEADERS': '#3A7D44',     # Forest green
-                        '⚠️ RESURGENCE RISK': '#DCA842',   # Warm editorial yellow
-                        '🔄 POSITIVE MOMENTUM': '#3F6C95', # Elegant slate-blue
-                        '🚨 CRITICAL PRIORITY': '#B83A26'  # Terracotta red
+                        '✅ HEALTH LEADERS': '#3A7D44',
+                        '⚠️ RESURGENCE RISK': '#DCA842',
+                        '🔄 POSITIVE MOMENTUM': '#3F6C95',
+                        '🚨 CRITICAL PRIORITY': '#B83A26'
                     },
                     size_max=45
                 )
                 
-                # Add professional quadrant division lines
                 fig_bcg.add_hline(y=0, line_dash="dash", line_color="#C97A63", line_width=1.5, opacity=0.7)
                 fig_bcg.add_vline(x=median_incidence_2017, line_dash="dash", line_color="#C97A63", line_width=1.5, opacity=0.7)
                 
-                # Add elegant Paper-anchored labels for quadrants (never overlap and dynamic)
                 fig_bcg.add_annotation(x=0.02, y=0.96, xref="paper", yref="paper", text="⚠️ <b>RESURGENCE RISK</b>", showarrow=False, font=dict(color="#DCA842", size=10), bgcolor="rgba(255,255,255,0.95)", bordercolor="#DCA842", borderwidth=1, borderpad=3)
                 fig_bcg.add_annotation(x=0.02, y=0.04, xref="paper", yref="paper", text="✅ <b>HEALTH LEADERS</b>", showarrow=False, font=dict(color="#3A7D44", size=10), bgcolor="rgba(255,255,255,0.95)", bordercolor="#3A7D44", borderwidth=1, borderpad=3)
                 fig_bcg.add_annotation(x=0.98, y=0.96, xref="paper", yref="paper", text="🚨 <b>CRITICAL PRIORITY</b>", showarrow=False, font=dict(color="#B83A26", size=10), bgcolor="rgba(255,255,255,0.95)", bordercolor="#B83A26", borderwidth=1, borderpad=3, xanchor="right")
                 fig_bcg.add_annotation(x=0.98, y=0.04, xref="paper", yref="paper", text="🔄 <b>POSITIVE MOMENTUM</b>", showarrow=False, font=dict(color="#3F6C95", size=10), bgcolor="rgba(255,255,255,0.95)", bordercolor="#3F6C95", borderwidth=1, borderpad=3, xanchor="right")
                 
-                # Clean and descriptive axis styling, fixing truncated margins
                 fig_bcg.update_layout(
                     plot_bgcolor="rgba(0,0,0,0)", 
                     paper_bgcolor="rgba(0,0,0,0)", 
                     font_family="Inter", 
                     height=580,
-                    margin=dict(l=100, r=40, t=80, b=80), # Large left margin to resolve truncated evolution label
+                    margin=dict(l=100, r=40, t=80, b=80),
                     xaxis=dict(
                         title="Current Incidence Rate (2017 per 1,000 population at risk)",
                         gridcolor="#EAE9E4",
@@ -764,7 +752,6 @@ with menu_tab4:
                     )
                 )
                 
-                # Set dynamic text layout position & premium custom tooltip structure
                 fig_bcg.update_traces(
                     customdata=filtered_bcg[['Population (M)', 'Quadrant']].values,
                     textposition='top center',
@@ -773,7 +760,6 @@ with menu_tab4:
                 
                 st.plotly_chart(fig_bcg, use_container_width=True)
 
-        # INTERPRÉTATION RESTAURÉE
         st.markdown("""
         ##### 💡 Strategic Insights & Data Engineering Highlights
         * **Demonstration of Data Agility:** Handled **World Health Organization (WHO)** macro-level epidemiological metrics, combining temporal data, country normalization, and population weighting in Python.
@@ -836,7 +822,6 @@ with menu_tab4:
             with col_met2: st.metric(label="Deduplicated Rows Found", value=f"{duplicates_removed} Rows", delta="Data integrity verified", delta_color="inverse")
             with col_met3: st.metric(label="Total Imputed Data Fields", value=f"{total_imputed_points} NULLs Fixed", delta="0 NaN remaining")
                 
-            # Define helper function to clean and disambiguate feature names for display
             def get_clean_feature_name(col):
                 col_lower = col.lower()
                 if "drinking water" in col_lower:
@@ -885,7 +870,6 @@ with menu_tab4:
             st.code(pipeline_code, language="python")
         except Exception: st.caption("Fichier code `analyse.py` introuvable.")
 
-        # INTERPRÉTATION RESTAURÉE
         st.markdown("""
         ##### 💡 Data Engineering Value & Recruiter Takeaways
         * **Robust Handling of Real-World Data Sparsity:** In epidemiological research, data is notoriously incomplete. Designing deterministic pruning algorithms prevents model overfitting from empty dimensions.
@@ -900,18 +884,14 @@ with menu_tab5:
     st.subheader("✉️ Contact Me")
     with st.form("contact_form", clear_on_submit=True):
         col_nom, col_prenom = st.columns(2)
-        with col_nom: 
-            nom = st.text_input("Last Name *", placeholder="Dupont")
-        with col_prenom: 
-            prenom = st.text_input("First Name *", placeholder="Jean")
+        with col_nom: nom = st.text_input("Last Name *", placeholder="Dupont")
+        with col_prenom: prenom = st.text_input("First Name *", placeholder="Jean")
         email = st.text_input("Email Address *", placeholder="jean.dupont@example.com")
         message = st.text_area("Your Message *", placeholder="Write your message here...", height=120)
         submitted = st.form_submit_button("Send Message 🚀")
         if submitted:
-            if not nom or not prenom or not email or not message: 
-                st.error("❌ Please fill in all the fields.")
-            else: 
-                st.success(f"✅ Thank you {prenom}! Your message has been sent successfully.")
+            if not nom or not prenom or not email or not message: st.error("❌ Please fill in all fields.")
+            else: st.success(f"✅ Thank you {prenom}! Your message has been sent successfully.")
 
 # 📄 ARCHITECTURE DETAILS AT BOTTOM
 st.markdown("<br><br>", unsafe_allow_html=True)
